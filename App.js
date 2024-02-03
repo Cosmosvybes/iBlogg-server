@@ -1,14 +1,15 @@
 const express = require("express");
-const port = process.env.PORT || 1818;
+const dotenv = require("dotenv");
+dotenv.config();
+const port = process.env.PORT;
 const app = express();
 const bodyParser = require("body-parser");
 const { createPost } = require("./Routes/Api");
+const { uploadImage } = require("./Middleware/upload");
 app.use(bodyParser.urlencoded({ extended: false }));
-const multer = require("multer");
-const upload = multer({ dest: "images/" });
 app.use(express.json());
-
-app.post("/api/create", upload.single("image"), createPost);
+F
+app.post("/api/create", uploadImage(), createPost);
 
 app.listen(port, () => {
   console.log(`server running on port ${port}`);
