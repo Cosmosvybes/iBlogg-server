@@ -1,4 +1,5 @@
 #enviroment
 node_modules
 .dotenv
+images
 
