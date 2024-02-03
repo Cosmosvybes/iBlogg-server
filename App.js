@@ -8,7 +8,7 @@ const { createPost } = require("./Routes/Api");
 const { uploadImage } = require("./Middleware/upload");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
-F
+
 app.post("/api/create", uploadImage(), createPost);
 
 app.listen(port, () => {
