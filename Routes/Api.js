@@ -1,6 +1,6 @@
 // const cookieParser = require("cookie-parser");
 const { postSchemer, allPost } = require("../Model/Post");
-const { existUser, userSchemer } = require("../Model/User");
+const { userSchemer, getUser } = require("../Model/User");
 const { uploadImage } = require("../Utils/cloudinary");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -10,7 +10,7 @@ config();
 //create new post function
 const createPost = async (req, res) => {
   const imageFile = req.file;
-  const user = "cosmos";
+  const user = req.user.payload;
   const { postBody } = req.body;
   try {
     if (imageFile || postBody) {
@@ -46,9 +46,9 @@ const getPosts = async (req, res) => {
 const profile = async (req, res) => {
   const username = req.user.payload;
   try {
-    const userData = await existUser(username);
+    const userData = await getUser(username);
     if (userData) {
-      res.status(200).send({ userData });
+      res.status(200).send(userData);
     }
   } catch (error) {
     res.status(401).send({ response: "operation failed" });
@@ -82,7 +82,7 @@ const signIn = async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    const userData = await existUser(username);
+    const userData = await getUser(username);
     if (userData) {
       let isAuthorized = await bcrypt.compare(password, userData.password);
       if (isAuthorized) {
@@ -96,7 +96,7 @@ const signIn = async (req, res) => {
         res.status(403).send({ response: "incorrect password" });
       }
     } else {
-      resstatus(404).send({ response: "user not found" });
+      res.status(404).send({ response: "user not found" });
     }
   } catch (error) {
     res.status(401).send({ response: "operation failed", error });

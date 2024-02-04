@@ -22,13 +22,9 @@ const userSchemer = async (firstName, lastName, username, password, dob) => {
   }
 };
 
-const existUser = async (username) => {
-  try {
-    const userData = await bloggers.findOne({ username: username });
-    return userData;
-  } catch (error) {
-    return { error };
-  }
+const getUser = async (username) => {
+  const userData = await bloggers.findOne({ username: username });
+  return userData;
 };
 
-module.exports = { userSchemer, existUser };
+module.exports = { userSchemer, getUser };
