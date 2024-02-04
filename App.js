@@ -22,7 +22,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "dist")));
 
 app.post("/api/create", Auth, uploadImage(), createPost);
-app.get("/api/posts", Auth, getPosts);
+app.get("/api/posts", getPosts);
 app.post("/api/sign-up", signUp);
 app.post("/api/sign-in", signIn);
 
