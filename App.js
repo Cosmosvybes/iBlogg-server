@@ -31,6 +31,12 @@ app.get("/api/profile", Auth, profile);
 app.get("/", (req, res) => {
   res.sendFile(__dirname, "dist", "index.html");
 });
+app.get("/create", (req, res) => {
+  res.sendFile(__dirname, "dist", "index.html");
+});
+app.get("/profile", (req, res) => {
+  res.sendFile(__dirname, "dist", "index.html");
+});
 
 app.listen(port, () => {
   console.log(`server running on port ${port}`);
