@@ -29,16 +29,16 @@ app.post("/api/sign-in", signIn);
 app.get("/api/profile", Auth, profile);
 
 app.get("/", (req, res) => {
-  res.sendFile(__dirname, "dist", "index.html");
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
-app.get("/api/create", (req, res) => {
-  res.sendFile(__dirname, "dist", "index.html");
+app.get("/create", (req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
-app.get("/api/signin", (req, res) => {
-  res.sendFile(__dirname, "dist", "index.html");
+app.get("/signin", (req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
-app.get("/api/profile", (req, res) => {
-  res.sendFile(__dirname, "dist", "index.html");
+app.get("/profile", (req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 
 app.listen(port, () => {
