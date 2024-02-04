@@ -1,5 +1,6 @@
 #enviroment
 node_modules
 .dotenv
-images
+.env
+/images
 
