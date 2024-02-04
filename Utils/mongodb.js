@@ -1,5 +1,5 @@
 const { MongoClient } = require("mongodb");
-const { config } = reuqire("dotenv");
+const { config } = require("dotenv");
 config();
 let url = process.env.MONGO_URL;
 const client = new MongoClient(url);
