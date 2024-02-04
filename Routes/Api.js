@@ -10,7 +10,7 @@ config();
 //create new post function
 const createPost = async (req, res) => {
   const imageFile = req.file;
-  const user =  "cosmos";
+  const user = "cosmos";
   const { postBody } = req.body;
   try {
     if (imageFile || postBody) {
@@ -80,6 +80,7 @@ const signUp = async (req, res) => {
 
 const signIn = async (req, res) => {
   const { username, password } = req.body;
+
   try {
     const userData = await existUser(username);
     if (userData) {
@@ -91,7 +92,11 @@ const signIn = async (req, res) => {
         );
         res.cookie("userToken", userToken, { maxAge: 3600000, path: "/api/" });
         res.redirect(302, "/api/profile");
+      } else {
+        res.status(403).send({ response: "incorrect password" });
       }
+    } else {
+      resstatus(404).send({ response: "user not found" });
     }
   } catch (error) {
     res.status(401).send({ response: "operation failed", error });
