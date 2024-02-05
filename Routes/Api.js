@@ -104,14 +104,12 @@ const signIn = async (req, res) => {
   }
 };
 
-
-
 const thumbsUp = async (req, res) => {
   const { id, user } = req.body;
-  // console.log({ id, user });
   try {
     // const response = await likePost(id, user);
-    const post = await getPost("65bec6be0b56cf6018c1d0d9");
+    // const user = await getUser(user);
+    const post = await getPost();
     res.status(200).send(post);
   } catch (error) {
     res.status(503).send({ response: "internal error", error });

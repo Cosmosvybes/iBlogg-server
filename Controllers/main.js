@@ -3,10 +3,10 @@ const { bloggs } = require("../Utils/mongodb");
 
 const checkandUpdate = async (condition, id, user) => {
   if (!condition) {
-    bloggs.updateOne({ _id: id }, { $push: { likers: { username: user } } });
+    bloggs.updateOne({ id: id }, { $push: { likers: { username: user } } });
     return { post: await getPost(id) };
   } else {
-    bloggs.updateOne({ _id: id }, { $pull: { likers: { username: user } } });
+    bloggs.updateOne({ id: id }, { $pull: { likers: { username: user } } });
     return { post: await getPost(id) };
   }
 };

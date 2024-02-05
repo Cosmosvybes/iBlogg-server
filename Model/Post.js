@@ -2,6 +2,7 @@ const { bloggs } = require("../Utils/mongodb");
 const postSchemer = async (user, postBody, imageFile) => {
   try {
     const data = await bloggs.insertOne({
+      id: Date.now(),
       user: user,
       postBody: postBody,
       image: imageFile,
@@ -14,7 +15,7 @@ const postSchemer = async (user, postBody, imageFile) => {
       fire: 0,
     });
     return data.insertedId
-      ? { data: await getPost(data.insertedId) }
+      ? { data: await getPost(data.id) }
       : { response: "operation failed!" };
   } catch (error) {
     return { error };
@@ -22,7 +23,7 @@ const postSchemer = async (user, postBody, imageFile) => {
 };
 
 const getPost = async (id) => {
-  let postData = await bloggs.findOne({ _id: id });
+  let postData = await bloggs.findOne({ id: id });
   return postData;
 };
 
