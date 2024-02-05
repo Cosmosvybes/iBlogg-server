@@ -2,7 +2,7 @@
 const { postSchemer, allPost, getPost } = require("../Model/Post");
 const { userSchemer, getUser } = require("../Model/User");
 const { uploadImage } = require("../Utils/cloudinary");
-const { likePost } = require("../Controllers/main");
+const { likePost, checkandUpdate, checkandUpdateThumbsDown } = require("../Controllers/main");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { config } = require("dotenv");
@@ -107,13 +107,32 @@ const signIn = async (req, res) => {
 const thumbsUp = async (req, res) => {
   const { id, user } = req.body;
   try {
-    // const response = await likePost(id, user);
-    // const user = await getUser(user);
-    const post = await getPost();
-    res.status(200).send(post);
+    const post = await getPost(Number(id));
+    let likers = post.likers;
+    let isLikedByUser = await likers.find((liker) => {
+      return liker.username == user;
+    });
+    let response = await checkandUpdate(isLikedByUser, post.id, user);
+    res.status(200).send(response);
   } catch (error) {
-    res.status(503).send({ response: "internal error", error });
+    res.status(500).send({ response: "internal error", error });
   }
 };
 
-module.exports = { createPost, getPosts, profile, signIn, signUp, thumbsUp };
+const thumbsDown = async (req, res) => {
+  const { id, user } = req.body;
+  try {
+    const post = await getPost(Number(id));
+    let disLikers = post.thumbsdown;
+    let isThumbedDown = await disLikers.find((disliker) => {
+      return disliker.username == user;
+    });
+    let response = await checkandUpdateThumbsDown(isThumbedDown, post.id, user);
+    res.status(200).send(response);
+  } catch (error) {
+    res.status(500).send({ response: "internal error", error });
+  }
+};
+
+
+module.exports = { createPost, getPosts, profile, signIn, signUp, thumbsUp,thumbsDown };

@@ -3,19 +3,33 @@ const { bloggs } = require("../Utils/mongodb");
 
 const checkandUpdate = async (condition, id, user) => {
   if (!condition) {
-    bloggs.updateOne({ id: id }, { $push: { likers: { username: user } } });
-    return { post: await getPost(id) };
+    await bloggs.updateOne(
+      { id: id },
+      { $push: { likers: { username: user } } }
+    );
+    return { post: await getPost(Number(id)) };
   } else {
-    bloggs.updateOne({ id: id }, { $pull: { likers: { username: user } } });
-    return { post: await getPost(id) };
+    await bloggs.updateOne(
+      { id: id },
+      { $pull: { likers: { username: user } } }
+    );
+    return { post: await getPost(Number(id)) };
   }
 };
-const likePost = async (id, user) => {
-  const post = await getPost(id);
-  let postLikers = post.likers;
-  console.log(post);
-  // const userLiked = postLikers.find((like) => like.username === user);
-  // return checkandUpdate(userLiked, id, user);
+const checkandUpdateThumbsDown = async (condition, id, user) => {
+  if (!condition) {
+    await bloggs.updateOne(
+      { id: id },
+      { $push: { thumbsdown: { username: user } } }
+    );
+    return { post: await getPost(Number(id)) };
+  } else {
+    await bloggs.updateOne(
+      { id: id },
+      { $pull: { thumbsdown: { username: user } } }
+    );
+    return { post: await getPost(Number(id)) };
+  }
 };
 
-module.exports = { likePost };
+module.exports = { checkandUpdate, checkandUpdateThumbsDown };

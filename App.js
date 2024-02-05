@@ -13,6 +13,7 @@ const {
   signIn,
   profile,
   thumbsUp,
+  thumbsDown,
 } = require("./Routes/Api");
 const { uploadImage } = require("./Middleware/upload");
 const { Auth } = require("./Middleware/Auth");
@@ -34,6 +35,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/api/like-post", thumbsUp);
+app.post("/api/thumbsdown", thumbsDown);
 
 app.get("/post/:id", (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));

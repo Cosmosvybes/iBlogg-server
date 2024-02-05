@@ -1,18 +1,17 @@
 const { bloggs } = require("../Utils/mongodb");
-const postSchemer = async (user, postBody, imageFile) => {
+const postSchemer = async (user, title, postBody, imageFile) => {
   try {
     const data = await bloggs.insertOne({
       id: Date.now(),
+      title:title,
       user: user,
       postBody: postBody,
       image: imageFile,
       date: new Date().toDateString("en-US"),
       time: new Date().toTimeString("en-Us"),
-      likes: 0,
       likers: [],
       fireMakers: [],
       comments: [],
-      fire: 0,
     });
     return data.insertedId
       ? { data: await getPost(data.id) }
