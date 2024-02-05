@@ -31,6 +31,9 @@ app.get("/api/profile", Auth, profile);
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
+app.get("/post/:id", (req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
+});
 app.get("/create", (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
