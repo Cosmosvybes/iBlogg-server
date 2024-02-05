@@ -31,4 +31,4 @@ const allPost = async () => {
   return postsData;
 };
 
-module.exports = { postSchemer, allPost };
+module.exports = { postSchemer, allPost, getPost };

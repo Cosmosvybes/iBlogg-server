@@ -1,7 +1,8 @@
 // const cookieParser = require("cookie-parser");
-const { postSchemer, allPost } = require("../Model/Post");
+const { postSchemer, allPost, getPost } = require("../Model/Post");
 const { userSchemer, getUser } = require("../Model/User");
 const { uploadImage } = require("../Utils/cloudinary");
+const { likePost } = require("../Controllers/main");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { config } = require("dotenv");
@@ -103,4 +104,18 @@ const signIn = async (req, res) => {
   }
 };
 
-module.exports = { createPost, getPosts, profile, signIn, signUp };
+
+
+const thumbsUp = async (req, res) => {
+  const { id, user } = req.body;
+  // console.log({ id, user });
+  try {
+    // const response = await likePost(id, user);
+    const post = await getPost("65bec6be0b56cf6018c1d0d9");
+    res.status(200).send(post);
+  } catch (error) {
+    res.status(503).send({ response: "internal error", error });
+  }
+};
+
+module.exports = { createPost, getPosts, profile, signIn, signUp, thumbsUp };
