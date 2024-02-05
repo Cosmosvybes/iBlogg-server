@@ -16,10 +16,9 @@ config();
 const createPost = async (req, res) => {
   const imageFile = req.file;
   const user = req.user.payload;
-
   const { postBody, title } = req.body;
   try {
-    if (imageFile || postBody) {
+    if (imageFile) {
       let cloudUploadResponse = await uploadImage(imageFile.path);
       if (cloudUploadResponse) {
         let postData = await postSchemer(
@@ -33,13 +32,19 @@ const createPost = async (req, res) => {
             serverResponse: "success, your post has been published!",
             data: postData,
           });
-        } else {
-          res.status(500).send({ response: "internal error, try again!" });
         }
+      }
+    } else {
+      let postData = await postSchemer(user, title, postBody);
+      if (postData) {
+        res.status(200).send({
+          serverResponse: "success, your post has been published!",
+          data: postData,
+        });
       }
     }
   } catch (error) {
-    res.status(500).send({ response: "internal error" });
+    res.status(500).send({ error });
   }
 };
 
