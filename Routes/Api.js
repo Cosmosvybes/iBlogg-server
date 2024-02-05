@@ -2,7 +2,11 @@
 const { postSchemer, allPost, getPost } = require("../Model/Post");
 const { userSchemer, getUser } = require("../Model/User");
 const { uploadImage } = require("../Utils/cloudinary");
-const { likePost, checkandUpdate, checkandUpdateThumbsDown } = require("../Controllers/main");
+const {
+  likePost,
+  checkandUpdate,
+  checkandUpdateThumbsDown,
+} = require("../Controllers/main");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { config } = require("dotenv");
@@ -12,12 +16,18 @@ config();
 const createPost = async (req, res) => {
   const imageFile = req.file;
   const user = req.user.payload;
-  const { postBody } = req.body;
+
+  const { postBody, title } = req.body;
   try {
     if (imageFile || postBody) {
       let cloudUploadResponse = await uploadImage(imageFile.path);
       if (cloudUploadResponse) {
-        let postData = await postSchemer(user, postBody, cloudUploadResponse);
+        let postData = await postSchemer(
+          user,
+          title,
+          postBody,
+          cloudUploadResponse
+        );
         if (postData) {
           res.status(200).send({
             serverResponse: "success, your post has been published!",
@@ -134,5 +144,12 @@ const thumbsDown = async (req, res) => {
   }
 };
 
-
-module.exports = { createPost, getPosts, profile, signIn, signUp, thumbsUp,thumbsDown };
+module.exports = {
+  createPost,
+  getPosts,
+  profile,
+  signIn,
+  signUp,
+  thumbsUp,
+  thumbsDown,
+};

@@ -3,14 +3,14 @@ const postSchemer = async (user, title, postBody, imageFile) => {
   try {
     const data = await bloggs.insertOne({
       id: Date.now(),
-      title:title,
+      title: title,
       user: user,
       postBody: postBody,
       image: imageFile,
       date: new Date().toDateString("en-US"),
-      time: new Date().toTimeString("en-Us"),
+      time: new Date().toLocaleTimeString(),
       likers: [],
-      fireMakers: [],
+      thumbsdown: [],
       comments: [],
     });
     return data.insertedId
