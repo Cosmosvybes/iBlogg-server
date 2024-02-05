@@ -40,7 +40,11 @@ app.get("/signin", (req, res) => {
 app.get("/profile", (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
-
+app.post("/api/log-out", (req, res) => {
+  res.clearCookie("userToken");
+  res.cookie("userToken", "", { maxAge: 0, path: "/api/" });
+  res.send({ response: "account signed out" });
+});
 app.listen(port, () => {
   console.log(`server running on port ${port}`);
 });
