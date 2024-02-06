@@ -20,7 +20,7 @@ const createPost = async (req, res) => {
   try {
     if (imageFile) {
       let cloudUploadResponse = await uploadImage(imageFile.path);
-      if (cloudUploadResponse) {
+      if (cloudUploadResponse && postBody) {
         let postData = await postSchemer(
           user,
           title,
@@ -34,6 +34,8 @@ const createPost = async (req, res) => {
           });
         }
       }
+    } else if (!postBody || !title) {
+      res.status(400).send({ response: "discription of your post is missing" });
     } else {
       let postData = await postSchemer(user, title, postBody);
       if (postData) {
@@ -72,23 +74,25 @@ const profile = async (req, res) => {
 };
 
 const signUp = async (req, res) => {
-  const { firstName, lastName, username, password, dob } = req.body;
+  const { firstname, lastname, email, password, username } = req.body;
+  console.log(req.body);
   try {
     let existUsername = await existUser(username);
-    if (existUsername) {
-      res
-        .status(403)
-        .send({ response: `username ${username} exist , use a new name` });
-    } else {
-      const data = await userSchemer(
-        firstName,
-        lastName,
-        username,
-        password,
-        dob
-      );
-      res.send({ response: "account succesfully created", data });
-    }
+    console.log(existUsername);
+    // if (existUsername) {
+    //   res
+    //     .status(403)
+    //     .send({ response: `username ${username} exist , use a new name` });
+    // } else {
+    //   const data = await userSchemer(
+    //     firstname,
+    //     lastname,
+    //     email,
+    //     password,
+    //     username
+    //   );
+    //   res.send({ response: "account succesfully created", data });
+    // }
   } catch (error) {
     res.send({ error });
   }

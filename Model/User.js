@@ -1,7 +1,13 @@
 const { bloggers } = require("../Utils/mongodb");
 const bcrypt = require("bcrypt");
 
-const userSchemer = async (firstName, lastName, username, password, dob) => {
+const userSchemer = async (
+  firstName,
+  lastName,
+  email,
+  password,
+  username,
+) => {
   try {
     let saltRound = 10;
     let encryptedPassword = await bcrypt.hash(password, saltRound);
@@ -9,10 +15,9 @@ const userSchemer = async (firstName, lastName, username, password, dob) => {
       name: firstName,
       lastName: lastName,
       bio: "",
-      dob: dob,
+      email: email,
       username: username,
       password: encryptedPassword,
-      posts: [],
     });
     if (newUser.insertedId) {
       return { newUser: await existUser(username) };
