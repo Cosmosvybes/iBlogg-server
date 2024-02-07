@@ -123,6 +123,7 @@ const signIn = async (req, res) => {
 
 const thumbsUp = async (req, res) => {
   const { id, user } = req.body;
+  console.log(id, user);
   try {
     const post = await getPost(Number(id));
     let likers = post.likers;
@@ -138,12 +139,14 @@ const thumbsUp = async (req, res) => {
 
 const thumbsDown = async (req, res) => {
   const { id, user } = req.body;
+  console.log(id, user);
   try {
     const post = await getPost(Number(id));
     let disLikers = post.thumbsdown;
     let isThumbedDown = await disLikers.find((disliker) => {
       return disliker.username == user;
     });
+    console.log(isThumbedDown);
     let response = await checkandUpdateThumbsDown(isThumbedDown, post.id, user);
     res.status(200).send(response);
   } catch (error) {
