@@ -75,24 +75,22 @@ const profile = async (req, res) => {
 
 const signUp = async (req, res) => {
   const { firstname, lastname, email, password, username } = req.body;
-  console.log(req.body);
   try {
-    let existUsername = await existUser(username);
-    console.log(existUsername);
-    // if (existUsername) {
-    //   res
-    //     .status(403)
-    //     .send({ response: `username ${username} exist , use a new name` });
-    // } else {
-    //   const data = await userSchemer(
-    //     firstname,
-    //     lastname,
-    //     email,
-    //     password,
-    //     username
-    //   );
-    //   res.send({ response: "account succesfully created", data });
-    // }
+    let existUsername = await getUser(username);
+    if (existUsername) {
+      res
+        .status(403)
+        .send({ response: `username ${username} exist use a new name` });
+    } else {
+      const data = await userSchemer(
+        firstname,
+        lastname,
+        email,
+        password,
+        username
+      );
+      res.send({ response: "account succesfully created", data });
+    }
   } catch (error) {
     res.send({ error });
   }
