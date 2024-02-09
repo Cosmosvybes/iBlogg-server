@@ -123,15 +123,17 @@ const signIn = async (req, res) => {
 
 const thumbsUp = async (req, res) => {
   const { id, user } = req.body;
-  let condition;
   try {
     const post = await getPost(Number(id));
     let likers = post.likers;
     let isLikedByUser = await likers.find((liker) => {
       return liker.username == user;
     });
-    condition = isLikedByUser ? true : false;
-    let response = await checkandUpdate(condition, post.id, user);
+    let response = await checkandUpdate(
+      isLikedByUser ? true : false,
+      post.id,
+      user
+    );
     res.status(200).send(response);
   } catch (error) {
     res.status(500).send({ response: "internal error", error });
@@ -146,7 +148,6 @@ const thumbsDown = async (req, res) => {
     let isThumbedDown = await disLikers.find((disliker) => {
       return disliker.username == user;
     });
-
     let response = await checkandUpdateThumbsDown(
       isThumbedDown ? true : false,
       post.id,

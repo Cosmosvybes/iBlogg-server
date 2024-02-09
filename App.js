@@ -43,9 +43,7 @@ app.get("/post/:id", (req, res) => {
 app.get("/create", (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
-app.get("/signin", (req, res) => {
-  res.sendFile(path.join(__dirname, "dist", "index.html"));
-});
+
 app.get("/profile", (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
