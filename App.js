@@ -40,6 +40,9 @@ app.post("/api/thumbsdown", thumbsDown);
 app.get("/post/:id", (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
+app.get("/signin", (req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
+});
 app.get("/create", (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
