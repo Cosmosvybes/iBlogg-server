@@ -1,7 +1,7 @@
-const express = require("express");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const path = require("path");
+const express = require("express");
 dotenv.config();
 const port = process.env.PORT;
 const app = express();
@@ -14,7 +14,7 @@ const {
   profile,
   thumbsUp,
   thumbsDown,
-  profilePost,
+  
 } = require("./Routes/Api");
 const { uploadImage } = require("./Middleware/upload");
 const { Auth } = require("./Middleware/Auth");
