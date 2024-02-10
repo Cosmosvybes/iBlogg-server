@@ -31,4 +31,9 @@ const allPost = async () => {
   return postsData;
 };
 
-module.exports = { postSchemer, allPost, getPost };
+async function getProfilePost(profileUsername) {
+  const postData = await bloggs.find({ username: profileUsername }).toArray();
+  return postData.length > 0 ? postData : "you don't have any post yet";
+}
+
+module.exports = { postSchemer, allPost, getPost, getProfilePost };

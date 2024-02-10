@@ -1,6 +1,7 @@
 #enviroment
-node_modules
-.dotenv
-.env
-/images
+*node_modules
+*.dotenv
+*.env
+# images
+*images
 

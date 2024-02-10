@@ -1,5 +1,10 @@
 // const cookieParser = require("cookie-parser");
-const { postSchemer, allPost, getPost } = require("../Model/Post");
+const {
+  postSchemer,
+  allPost,
+  getPost,
+  getProfilePost,
+} = require("../Model/Post");
 const { userSchemer, getUser } = require("../Model/User");
 const { uploadImage } = require("../Utils/cloudinary");
 const {
@@ -65,11 +70,12 @@ const profile = async (req, res) => {
   const username = req.user.payload;
   try {
     const userData = await getUser(username);
+    const posts = await getProfilePost(username);
     if (userData) {
-      res.status(200).send(userData);
+      res.status(200).send({ userData, posts });
     }
   } catch (error) {
-    res.status(401).send({ response: "operation failed" });
+    res.status(401).send({ response: "operation failed", error });
   }
 };
 
@@ -158,6 +164,16 @@ const thumbsDown = async (req, res) => {
     res.status(500).send({ response: "internal error", error });
   }
 };
+
+// const profilePost = async (req, res) => {
+//   const username = req.params.username;
+//   try {
+//     const posts = await getProfilePost(username);
+//     res.status(200).send(posts);
+//   } catch (error) {
+//     res.status(500).send({ err: error });
+//   }
+// };
 
 module.exports = {
   createPost,

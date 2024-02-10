@@ -14,6 +14,7 @@ const {
   profile,
   thumbsUp,
   thumbsDown,
+  profilePost,
 } = require("./Routes/Api");
 const { uploadImage } = require("./Middleware/upload");
 const { Auth } = require("./Middleware/Auth");
@@ -29,7 +30,6 @@ app.post("/api/sign-up", signUp);
 app.post("/api/sign-in", signIn);
 
 app.get("/api/profile", Auth, profile);
-
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
