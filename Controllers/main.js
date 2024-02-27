@@ -32,7 +32,7 @@ const checkandUpdateThumbsDown = async (condition, id, user) => {
   }
 };
 
-const updateUserProfile = async (user, name, lastname, username, dob, bio) => {
+const updateUserProfile = async (user, name, lastname, dob, bio) => {
   try {
     const data = await bloggers.updateOne(
       { username: user },
@@ -40,13 +40,12 @@ const updateUserProfile = async (user, name, lastname, username, dob, bio) => {
         $set: {
           name: name,
           lastName: lastname,
-          username: username,
           dob: dob,
           bio: bio,
         },
       }
     );
-    return data;
+    return data.matchedCount;
   } catch (error) {
     return error;
   }

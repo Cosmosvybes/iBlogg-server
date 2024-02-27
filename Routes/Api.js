@@ -188,19 +188,20 @@ const updateProfilePicture = async (req, res) => {
 
 const updateProfile = async (req, res) => {
   const user = req.user.payload;
-  const { name, lastName, username, dob, bio } = req.body;
-  console.log(req.body)
+  const { name, lastName, dob, bio } = req.body;
   try {
     const userAccount = await getUser(user);
     const updateResponse = await updateUserProfile(
       userAccount.username,
       name,
       lastName,
-      username,
       dob,
       bio
     );
-    console.log(updateResponse);
+
+    if (updateResponse) {
+      res.status(200).send({ response: "profile successfully updated" });
+    }
   } catch (error) {
     console.log(error);
   }
