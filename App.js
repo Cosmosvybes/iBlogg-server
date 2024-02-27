@@ -14,7 +14,8 @@ const {
   profile,
   thumbsUp,
   thumbsDown,
-  
+  updateProfilePicture,
+  updateProfile,
 } = require("./Routes/Api");
 const { uploadImage } = require("./Middleware/upload");
 const { Auth } = require("./Middleware/Auth");
@@ -28,8 +29,9 @@ app.post("/api/create", Auth, uploadImage(), createPost);
 app.get("/api/posts", getPosts);
 app.post("/api/sign-up", signUp);
 app.post("/api/sign-in", signIn);
-
-app.get("/api/profile", Auth, profile);
+app.patch("/api/update/profile", Auth, uploadImage(), updateProfilePicture);
+app.patch("/api/update/biodata/", Auth, updateProfile);
+app.get("/api/profile",Auth, profile);
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });

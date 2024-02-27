@@ -1,9 +1,10 @@
 const { bloggs } = require("../Utils/mongodb");
-const postSchemer = async (user, title, postBody, imageFile) => {
+const postSchemer = async (user, title, postBody, imageFile, senderPicture) => {
   try {
     const data = await bloggs.insertOne({
       id: Date.now(),
       title: title,
+      picture: senderPicture,
       user: user,
       postBody: postBody,
       image: imageFile,

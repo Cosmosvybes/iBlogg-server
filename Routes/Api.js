@@ -6,22 +6,24 @@ const {
   getProfilePost,
 } = require("../Model/Post");
 const { userSchemer, getUser } = require("../Model/User");
-const { uploadImage } = require("../Utils/cloudinary");
+const { uploadImage, userProfileUpload } = require("../Utils/cloudinary");
 const {
-  likePost,
   checkandUpdate,
   checkandUpdateThumbsDown,
+  updateUserProfile,
 } = require("../Controllers/main");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { config } = require("dotenv");
+const { bloggers } = require("../Utils/mongodb");
 config();
 
 //create new post function
 const createPost = async (req, res) => {
   const imageFile = req.file;
   const user = req.user.payload;
-  const { postBody, title } = req.body;
+  const { postBody, title, userPicture } = req.body;
+
   try {
     if (imageFile) {
       let cloudUploadResponse = await uploadImage(imageFile.path);
@@ -30,7 +32,8 @@ const createPost = async (req, res) => {
           user,
           title,
           postBody,
-          cloudUploadResponse
+          cloudUploadResponse,
+          userPicture
         );
         if (postData) {
           res.status(200).send({
@@ -42,7 +45,7 @@ const createPost = async (req, res) => {
     } else if (!postBody || !title) {
       res.status(400).send({ response: "discription of your post is missing" });
     } else {
-      let postData = await postSchemer(user, title, postBody);
+      let postData = await postSchemer(user, title, postBody, "", userPicture);
       if (postData) {
         res.status(200).send({
           serverResponse: "success, your post has been published!",
@@ -165,6 +168,44 @@ const thumbsDown = async (req, res) => {
   }
 };
 
+const updateProfilePicture = async (req, res) => {
+  const user = req.user.payload;
+  const imageFile = req.file;
+  try {
+    const uploadResponse = await userProfileUpload(imageFile.path);
+    const updateAccount = await bloggers.updateOne(
+      { username: user },
+      { $set: { profilePicture: uploadResponse } }
+    );
+    res.status(200).send({
+      response: "picture successfully uploaded",
+      ack: updateAccount.modifiedCount,
+    });
+  } catch (error) {
+    res.status(503).send({ response: "internal error, try again" });
+  }
+};
+
+const updateProfile = async (req, res) => {
+  const user = req.user.payload;
+  const { name, lastName, username, dob, bio } = req.body;
+  console.log(req.body)
+  try {
+    const userAccount = await getUser(user);
+    const updateResponse = await updateUserProfile(
+      userAccount.username,
+      name,
+      lastName,
+      username,
+      dob,
+      bio
+    );
+    console.log(updateResponse);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 // const profilePost = async (req, res) => {
 //   const username = req.params.username;
 //   try {
@@ -183,4 +224,6 @@ module.exports = {
   signUp,
   thumbsUp,
   thumbsDown,
+  updateProfile,
+  updateProfilePicture,
 };

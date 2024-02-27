@@ -1,5 +1,5 @@
 const { getPost } = require("../Model/Post");
-const { bloggs } = require("../Utils/mongodb");
+const { bloggs, bloggers } = require("../Utils/mongodb");
 
 const checkandUpdate = async (condition, id, user) => {
   if (!condition) {
@@ -15,7 +15,6 @@ const checkandUpdate = async (condition, id, user) => {
     );
     return { post: await getPost(Number(id)) };
   }
-
 };
 const checkandUpdateThumbsDown = async (condition, id, user) => {
   if (!condition) {
@@ -33,6 +32,28 @@ const checkandUpdateThumbsDown = async (condition, id, user) => {
   }
 };
 
+const updateUserProfile = async (user, name, lastname, username, dob, bio) => {
+  try {
+    const data = await bloggers.updateOne(
+      { username: user },
+      {
+        $set: {
+          name: name,
+          lastName: lastname,
+          username: username,
+          dob: dob,
+          bio: bio,
+        },
+      }
+    );
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
 
-
-module.exports = { checkandUpdate, checkandUpdateThumbsDown };
+module.exports = {
+  checkandUpdate,
+  checkandUpdateThumbsDown,
+  updateUserProfile,
+};

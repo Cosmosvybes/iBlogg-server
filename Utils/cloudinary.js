@@ -8,7 +8,7 @@ const api_secret = process.env.api_secret;
 cloudinary.config({
   cloud_name: cloud_name,
   api_key: api_key,
-  api_secret: api_secret
+  api_secret: api_secret,
 });
 
 const uploadImage = async (img) => {
@@ -24,4 +24,17 @@ const uploadImage = async (img) => {
   return url;
 };
 
-module.exports = { uploadImage };
+const userProfileUpload = async (pic) => {
+  let imageUrl;
+  try {
+    const response = await cloudinary.uploader.upload(pic, {
+      folder: "users/profile/pictures",
+    });
+    imageUrl = response.url;
+  } catch (error) {
+    console.log(error);
+  }
+  return imageUrl;
+};
+
+module.exports = { uploadImage, userProfileUpload };
