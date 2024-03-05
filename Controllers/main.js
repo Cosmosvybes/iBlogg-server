@@ -51,6 +51,11 @@ const updateUserProfile = async (user, name, lastname, dob, bio) => {
   }
 };
 
+const commentPost = () => {
+  
+}
+
+
 module.exports = {
   checkandUpdate,
   checkandUpdateThumbsDown,
