@@ -36,12 +36,14 @@ const createPost = async (req, res) => {
           userPicture
         );
         if (postData) {
+          // await bloggers.updateOne({ username: user }, {$push:{posts:}});
           res.status(200).send({
             serverResponse: "success, your post has been published!",
             data: postData,
           });
         }
       }
+      
     } else if (!postBody || !title) {
       res.status(400).send({ response: "discription of your post is missing" });
     } else {
