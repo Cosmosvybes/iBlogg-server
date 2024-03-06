@@ -212,7 +212,6 @@ const commentOnPost = async (req, res) => {
   const { postId, user, response } = req.body;
   try {
     const serverResponse = await commentPost(postId, user, response);
-    console.log(serverResponse);
   } catch (error) {
     console.log(error);
   }
