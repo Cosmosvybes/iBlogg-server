@@ -51,13 +51,20 @@ const updateUserProfile = async (user, name, lastname, dob, bio) => {
   }
 };
 
-const commentPost = () => {
-  
-}
-
+const commentPost = async (id, user, response) => {
+  const commentId = Date.now();
+  const updateResponse = await bloggs.updateOne(
+    { id: Number(id) },
+    {
+      $push: { comments: { username: user, comment: response, id: commentId } },
+    }
+  );
+  return updateResponse;
+};
 
 module.exports = {
   checkandUpdate,
   checkandUpdateThumbsDown,
   updateUserProfile,
+  commentPost,
 };

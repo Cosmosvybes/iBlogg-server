@@ -17,6 +17,8 @@ const {
   thumbsDown,
   updateProfilePicture,
   updateProfile,
+  commentPost,
+  commentOnPost,
 } = require("./Routes/Api");
 const { uploadImage } = require("./Middleware/upload");
 const { Auth } = require("./Middleware/Auth");
@@ -28,11 +30,12 @@ app.use(express.static(path.join(__dirname, "dist")));
 
 app.post("/api/create", Auth, uploadImage(), createPost);
 app.get("/api/posts", getPosts);
+app.patch("/api/post/comment", commentOnPost);
 app.post("/api/sign-up", signUp);
 app.post("/api/sign-in", signIn);
 app.patch("/api/update/profile", Auth, uploadImage(), updateProfilePicture);
 app.patch("/api/update/biodata/", Auth, updateProfile);
-app.get("/api/profile",Auth, profile);
+app.get("/api/profile", Auth, profile);
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });

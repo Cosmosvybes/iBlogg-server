@@ -11,6 +11,7 @@ const {
   checkandUpdate,
   checkandUpdateThumbsDown,
   updateUserProfile,
+  commentPost,
 } = require("../Controllers/main");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -43,7 +44,6 @@ const createPost = async (req, res) => {
           });
         }
       }
-      
     } else if (!postBody || !title) {
       res.status(400).send({ response: "discription of your post is missing" });
     } else {
@@ -208,6 +208,15 @@ const updateProfile = async (req, res) => {
     console.log(error);
   }
 };
+const commentOnPost = async (req, res) => {
+  const { postId, user, response } = req.body;
+  try {
+    const serverResponse = await commentPost(postId, user, response);
+    console.log(serverResponse);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 // const profilePost = async (req, res) => {
 //   const username = req.params.username;
@@ -220,6 +229,7 @@ const updateProfile = async (req, res) => {
 // };
 
 module.exports = {
+  commentOnPost,
   createPost,
   getPosts,
   profile,
