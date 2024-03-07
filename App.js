@@ -43,7 +43,7 @@ app.get("/", (req, res) => {
 app.post("/api/like-post", thumbsUp);
 app.post("/api/thumbsdown", thumbsDown);
 
-app.get("/post/:id", (req, res) => {
+app.get("/post/:id", Auth, (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 app.get("/signin", (req, res) => {
