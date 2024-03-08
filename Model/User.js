@@ -12,6 +12,7 @@ const userSchemer = async (firstName, lastName, email, password, username) => {
       email: email,
       username: username,
       password: encryptedPassword,
+      notifications:[]
     });
     if (newUser.insertedId) {
       return { newUser: await getUser(username) };

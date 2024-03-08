@@ -1,4 +1,5 @@
 const { getPost } = require("../Model/Post");
+const { getUser } = require("../Model/User");
 const { bloggs, bloggers } = require("../Utils/mongodb");
 
 const checkandUpdate = async (condition, id, user) => {
@@ -53,6 +54,23 @@ const updateUserProfile = async (user, name, lastname, dob, bio) => {
 
 const commentPost = async (id, user, response) => {
   const commentId = Date.now();
+  const post = await getPost(Number(id));
+
+  const postCreator = post.user;
+  await bloggers.updateOne(
+    { username: postCreator },
+    {
+      $push: {
+        notifications: {
+          postId: id,
+          sender: user,
+          comment: response,
+          readStatus: false,
+        },
+      },
+    }
+  );
+
   const updateResponse = await bloggs.updateOne(
     { id: Number(id) },
     {
