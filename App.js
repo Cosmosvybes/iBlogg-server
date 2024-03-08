@@ -48,12 +48,9 @@ app.get("/post/:id", (req, res) => {
 app.get("/signin", (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
-app.get("/discussion", Auth, (req, res) => {
+app.get("/discussion", (req, res) => {
   // res.sendFile(path.join(__dirname, "dist", "index.html"));
-  const user = req.user.payload;
-  if (!user) {
-    res.status(403).location("/").end();
-  }
+
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 app.get("/create", (req, res) => {
