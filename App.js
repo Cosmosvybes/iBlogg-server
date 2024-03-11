@@ -18,6 +18,7 @@ const {
   updateProfilePicture,
   updateProfile,
   commentOnPost,
+  readNotificationApi,
 } = require("./Routes/Api");
 const { uploadImage } = require("./Middleware/upload");
 const { Auth } = require("./Middleware/Auth");
@@ -26,7 +27,7 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "dist")));
-
+app.patch("/api/read/notification", Auth, readNotificationApi);
 app.post("/api/create", Auth, uploadImage(), createPost);
 app.get("/api/posts", getPosts);
 app.patch("/api/post/comment", commentOnPost);
@@ -35,13 +36,12 @@ app.post("/api/sign-in", signIn);
 app.patch("/api/update/profile", Auth, uploadImage(), updateProfilePicture);
 app.patch("/api/update/biodata/", Auth, updateProfile);
 app.get("/api/profile", Auth, profile);
+
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
-
 app.post("/api/like-post", thumbsUp);
 app.post("/api/thumbsdown", thumbsDown);
-
 app.get("/post/:id", (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });

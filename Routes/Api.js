@@ -12,6 +12,7 @@ const {
   checkandUpdateThumbsDown,
   updateUserProfile,
   commentPost,
+  readNotification,
 } = require("../Controllers/main");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -211,9 +212,20 @@ const updateProfile = async (req, res) => {
 const commentOnPost = async (req, res) => {
   const { postId, user, response } = req.body;
   try {
-    const serverResponse = await commentPost(postId, user, response);
+    await commentPost(postId, user, response);
   } catch (error) {
-    console.log(error);
+    res.status(503).send({ response: error });
+  }
+};
+
+const readNotificationApi = async (req, res) => {
+  const user = req.user.payload;
+  const { notificationId } = req.body;
+  try {
+    await readNotification(user, notificationId);
+  } catch (error) {
+    // console.log(error);
+    res.status(503).send({ res: error });
   }
 };
 
@@ -228,6 +240,7 @@ const commentOnPost = async (req, res) => {
 // };
 
 module.exports = {
+  readNotificationApi,
   commentOnPost,
   createPost,
   getPosts,

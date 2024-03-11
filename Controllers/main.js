@@ -55,7 +55,6 @@ const updateUserProfile = async (user, name, lastname, dob, bio) => {
 const commentPost = async (id, user, response) => {
   const commentId = Date.now();
   const post = await getPost(Number(id));
-
   const postCreator = post.user;
   await bloggers.updateOne(
     { username: postCreator },
@@ -63,6 +62,7 @@ const commentPost = async (id, user, response) => {
       $push: {
         notifications: {
           postId: id,
+          commentId: Date.now(),
           sender: user,
           comment: response,
           readStatus: false,
@@ -80,7 +80,16 @@ const commentPost = async (id, user, response) => {
   return updateResponse;
 };
 
+const readNotification = async (user, notificationId) => {
+  const status = await bloggers.updateOne(
+    { username: user, "notifications.commentId": notificationId },
+    { $set: { "notifications.$.readStatus": true } }
+  );
+  return status;
+};
+
 module.exports = {
+  readNotification,
   checkandUpdate,
   checkandUpdateThumbsDown,
   updateUserProfile,
