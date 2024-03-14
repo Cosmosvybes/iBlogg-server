@@ -1,7 +1,7 @@
 const { getPost } = require("../Model/Post");
-const { getUser } = require("../Model/User");
 const { bloggs, bloggers } = require("../Utils/mongodb");
-
+const jwt = require("jsonwebtoken");
+// const cookieParser = require("cookie-parser");
 const checkandUpdate = async (condition, id, user) => {
   if (!condition) {
     await bloggs.updateOne(
@@ -88,7 +88,27 @@ const readNotification = async (user, notificationId) => {
   return status;
 };
 
+const changePassword = async (email, code) => {
+  const user = await bloggers.findOne({ email: email });
+  if (!user) return "user not found";
+  const token = jwt.sign(
+    { user: user.username, verificationCode: code },
+    process.env.api_secret
+  );
+  return { token: token };
+};
+
+const updatePassword = async (user, password) => {
+  const updateResponse = await bloggers.updateOne(
+    { username: user },
+    { $set: { password: password } }
+  );
+  return updateResponse;
+};
+
 module.exports = {
+  updatePassword,
+  changePassword,
   readNotification,
   checkandUpdate,
   checkandUpdateThumbsDown,

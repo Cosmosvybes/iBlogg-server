@@ -1,4 +1,6 @@
 const { bloggs } = require("../Utils/mongodb");
+const { config } = require("dotenv");
+config();
 const postSchemer = async (user, title, postBody, imageFile, senderPicture) => {
   try {
     const data = await bloggs.insertOne({
@@ -9,7 +11,7 @@ const postSchemer = async (user, title, postBody, imageFile, senderPicture) => {
       postBody: postBody,
       image: imageFile,
       date: new Date().toDateString("en-US"),
-      time: new Date().toLocaleTimeString(),
+      time: new Date().toUTCString(),
       likers: [],
       thumbsdown: [],
       comments: [],

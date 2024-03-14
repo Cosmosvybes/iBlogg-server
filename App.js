@@ -19,9 +19,12 @@ const {
   updateProfile,
   commentOnPost,
   readNotificationApi,
+  ForgotPassword,
+  verifyCode,
+  UpdateUserPassword,
 } = require("./Routes/Api");
 const { uploadImage } = require("./Middleware/upload");
-const { Auth } = require("./Middleware/Auth");
+const { Auth, passwordToken } = require("./Middleware/Auth");
 app.use(cookieParser());
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -32,6 +35,9 @@ app.post("/api/create", Auth, uploadImage(), createPost);
 app.get("/api/posts", getPosts);
 app.patch("/api/post/comment", commentOnPost);
 app.post("/api/sign-up", signUp);
+app.patch("/api/password/recovery", ForgotPassword);
+app.post("/api/verify/code", passwordToken, verifyCode);
+app.patch("/api/change/password", passwordToken, UpdateUserPassword);
 app.post("/api/sign-in", signIn);
 app.patch("/api/update/profile", Auth, uploadImage(), updateProfilePicture);
 app.patch("/api/update/biodata/", Auth, updateProfile);

@@ -13,11 +13,14 @@ const {
   updateUserProfile,
   commentPost,
   readNotification,
+  changePassword,
+  updatePassword,
 } = require("../Controllers/main");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { config } = require("dotenv");
 const { bloggers } = require("../Utils/mongodb");
+const { mailTransporter } = require("../Utils/Mailer");
 config();
 
 //create new post function
@@ -32,7 +35,7 @@ const createPost = async (req, res) => {
       if (cloudUploadResponse && postBody) {
         let postData = await postSchemer(
           user,
-          title,
+          title.toUppercase(),
           postBody,
           cloudUploadResponse,
           userPicture
@@ -224,22 +227,71 @@ const readNotificationApi = async (req, res) => {
   try {
     await readNotification(user, notificationId);
   } catch (error) {
-    // console.log(error);
     res.status(503).send({ res: error });
   }
 };
 
-// const profilePost = async (req, res) => {
-//   const username = req.params.username;
-//   try {
-//     const posts = await getProfilePost(username);
-//     res.status(200).send(posts);
-//   } catch (error) {
-//     res.status(500).send({ err: error });
-//   }
-// };
+const ForgotPassword = async (req, res) => {
+  const { email } = req.body;
+  try {
+    const code = Date.now();
+    let verifictionCode = String(code).slice(8, 13);
+    const getUserResponse = await changePassword(email, verifictionCode);
+    if (!getUserResponse.token) {
+      res.send({ response: getUserResponse });
+    } else {
+      res.cookie("passToken", getUserResponse.token, {
+        maxAge: 3600000,
+        path: "/api/",
+      });
+      mailTransporter.sendMail({
+        sender: "FxTa",
+        from: "FxTa",
+        subject: "FxTa Verification code",
+        to: email,
+        html: `<div  style='display:block, text-align:center; height:auto;'> <p  style='text-align:center;'> Your password recovery verification code is </p> <h1 style='text-align:center;'> ${verifictionCode} </h1>  </div>`,
+      });
+      res.send({
+        isValid: true,
+        response: `Verification code has been sent to ${email}`,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+const verifyCode = async (req, res) => {
+  const code = req.user.verificationCode;
+  const { requestCode } = req.body;
+  try {
+    if (code == requestCode) {
+      res.status(200).send({ response: "verification successful" });
+    } else {
+      res.status(403).send({ response: "invalid verification" });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const UpdateUserPassword = async (req, res) => {
+  const user = req.user.user;
+  const { password } = req.body;
+  let saltRound = 10;
+  const encryptedPassword = await bcrypt.hash(password, saltRound);
+  try {
+    const response = await updatePassword(user, encryptedPassword);
+    if (response.modifiedCount === 1)
+      res.status(200).send({ response: "password successfully changed" });
+  } catch (error) {
+    res.status(503).send({ response: "internal error" });
+  }
+};
 
 module.exports = {
+  UpdateUserPassword,
+  verifyCode,
+  ForgotPassword,
   readNotificationApi,
   commentOnPost,
   createPost,
