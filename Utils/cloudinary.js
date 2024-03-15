@@ -17,9 +17,10 @@ const uploadImage = async (img) => {
     let cloudResponse = await cloudinary.uploader.upload(img, {
       folder: "iBlogg/media",
     });
+
     url = cloudResponse.url;
   } catch (error) {
-    console.log(error);
+    return;
   }
   return url;
 };

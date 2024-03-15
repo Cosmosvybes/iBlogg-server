@@ -28,24 +28,25 @@ const createPost = async (req, res) => {
   const imageFile = req.file;
   const user = req.user.payload;
   const { postBody, title, userPicture } = req.body;
-
   try {
     if (imageFile) {
       let cloudUploadResponse = await uploadImage(imageFile.path);
       if (cloudUploadResponse && postBody) {
         let postData = await postSchemer(
           user,
-          title.toUppercase(),
+          title,
           postBody,
           cloudUploadResponse,
           userPicture
         );
+        // console.log(cloudUploadResponse, postData);
         if (postData) {
-          // await bloggers.updateOne({ username: user }, {$push:{posts:}});
           res.status(200).send({
-            serverResponse: "success, your post has been published!",
+            serverResponse: "success, post published!",
             data: postData,
           });
+        } else {
+          res.status(503).send({ serverResponse: "internal erro, try again." });
         }
       }
     } else if (!postBody || !title) {
@@ -54,9 +55,11 @@ const createPost = async (req, res) => {
       let postData = await postSchemer(user, title, postBody, "", userPicture);
       if (postData) {
         res.status(200).send({
-          serverResponse: "success, your post has been published!",
+          serverResponse: "success, post published!",
           data: postData,
         });
+      } else {
+        res.status(503).send({ serverResponse: "internal erro, try again." });
       }
     }
   } catch (error) {
@@ -123,7 +126,7 @@ const signIn = async (req, res) => {
           { payload: userData.username },
           process.env.api_secret
         );
-        res.cookie("userToken", userToken, { maxAge: 3600000, path: "/api/" });
+        res.cookie("userToken", userToken, { maxAge: 36000000, path: "/api/" });
         res.redirect(302, "/api/profile");
       } else {
         res.status(403).send({ response: "incorrect password" });
