@@ -63,6 +63,15 @@ app.get("/create", (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 
+app.get("/forgotpassword", (req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
+});
+app.get("/new/password", (req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
+});
+app.get("/verification/code", (req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
+});
 app.get("/profile", (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
