@@ -56,20 +56,22 @@ const commentPost = async (id, user, response) => {
   const commentId = Date.now();
   const post = await getPost(Number(id));
   const postCreator = post.user;
-  await bloggers.updateOne(
-    { username: postCreator },
-    {
-      $push: {
-        notifications: {
-          postId: id,
-          commentId: Date.now(),
-          sender: user,
-          comment: response,
-          readStatus: false,
+  if (user != postCreator) {
+    await bloggers.updateOne(
+      { username: postCreator },
+      {
+        $push: {
+          notifications: {
+            postId: id,
+            commentId: Date.now(),
+            sender: user,
+            comment: response,
+            readStatus: false,
+          },
         },
-      },
-    }
-  );
+      }
+    );
+  }
 
   const updateResponse = await bloggs.updateOne(
     { id: Number(id) },
