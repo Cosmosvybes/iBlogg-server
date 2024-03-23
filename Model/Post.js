@@ -40,4 +40,5 @@ async function getProfilePost(profileUsername) {
   // return postData;
 }
 
+
 module.exports = { postSchemer, allPost, getPost, getProfilePost };
