@@ -4,6 +4,7 @@ const {
   allPost,
   getPost,
   getProfilePost,
+  draftPost,
 } = require("../Model/Post");
 const { userSchemer, getUser } = require("../Model/User");
 const { uploadImage, userProfileUpload } = require("../Utils/cloudinary");
@@ -39,14 +40,15 @@ const createPost = async (req, res) => {
           cloudUploadResponse,
           userPicture
         );
-        // console.log(cloudUploadResponse, postData);
         if (postData) {
           res.status(200).send({
             serverResponse: "success, post published!",
             data: postData,
           });
         } else {
-          res.status(503).send({ serverResponse: "internal erro, try again." });
+          res
+            .status(503)
+            .send({ serverResponse: "internal error, try again." });
         }
       }
     } else if (!postBody || !title) {
@@ -290,8 +292,26 @@ const UpdateUserPassword = async (req, res) => {
     res.status(503).send({ response: "internal error" });
   }
 };
+const postToDraft = async (req, res) => {
+  const imageFile = req.file;
+  const user = req.user.payload;
+  const { postBody, title, userPicture } = req.body;
+  try {
+    const response = await draftPost(
+      user,
+      title,
+      postBody,
+      imageFile,
+      userPicture
+    );
+    console.log(response);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 module.exports = {
+  postToDraft,
   UpdateUserPassword,
   verifyCode,
   ForgotPassword,

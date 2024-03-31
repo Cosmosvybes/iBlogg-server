@@ -1,4 +1,4 @@
-const { bloggs } = require("../Utils/mongodb");
+const { bloggs, bloggers } = require("../Utils/mongodb");
 const { config } = require("dotenv");
 config();
 const postSchemer = async (user, title, postBody, imageFile, senderPicture) => {
@@ -39,6 +39,23 @@ async function getProfilePost(profileUsername) {
   return postData.length > 0 ? postData : "you don't have any post yet";
   // return postData;
 }
+const draftPost = async (user, title, postBody, imageFile, senderPicture) => {
+  const draftResponse = await bloggers.updateOne(
+    { username: user },
+    {
+      $push: {
+        drafts: {
+          id: Date.now(),
+          user: user,
+          title: title,
+          postBody: postBody,
+          senderPicture: senderPicture,
+          imageFile: imageFile ? imageFile : "",
+        },
+      },
+    }
+  );
+  return draftResponse;
+};
 
-
-module.exports = { postSchemer, allPost, getPost, getProfilePost };
+module.exports = { postSchemer, allPost, getPost, getProfilePost, draftPost };

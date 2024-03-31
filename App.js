@@ -22,6 +22,7 @@ const {
   ForgotPassword,
   verifyCode,
   UpdateUserPassword,
+  postToDraft,
 } = require("./Routes/Api");
 const { uploadImage } = require("./Middleware/upload");
 const { Auth, passwordToken } = require("./Middleware/Auth");
@@ -31,6 +32,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "dist")));
 app.patch("/api/read/notification", Auth, readNotificationApi);
+app.patch("/api/post/draft", Auth, uploadImage(), postToDraft);
 app.post("/api/create", Auth, uploadImage(), createPost);
 app.get("/api/posts", getPosts);
 app.patch("/api/post/comment", commentOnPost);
