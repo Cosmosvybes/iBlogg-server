@@ -77,6 +77,9 @@ app.get("/verification/code", (req, res) => {
 app.get("/profile", (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
+app.get("/drafts", (req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
+});
 app.post("/api/log-out", (req, res) => {
   res.clearCookie("userToken");
   res.cookie("userToken", "", { maxAge: 0, path: "/api/" });

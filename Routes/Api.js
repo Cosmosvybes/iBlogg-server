@@ -297,11 +297,16 @@ const postToDraft = async (req, res) => {
   const user = req.user.payload;
   const { postBody, title, userPicture } = req.body;
   try {
+    if (!imageFile) {
+      const response = await draftPost(user, title, postBody, "", userPicture);
+      console.log(response);
+    }
+    let cloudUploadResponse = await uploadImage(imageFile.path);
     const response = await draftPost(
       user,
       title,
       postBody,
-      imageFile,
+      cloudUploadResponse,
       userPicture
     );
     console.log(response);
@@ -309,6 +314,7 @@ const postToDraft = async (req, res) => {
     console.log(error);
   }
 };
+
 
 module.exports = {
   postToDraft,
