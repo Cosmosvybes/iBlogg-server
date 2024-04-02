@@ -1,5 +1,6 @@
 const { bloggs, bloggers } = require("../Utils/mongodb");
 const { config } = require("dotenv");
+const { getUser } = require("./User");
 config();
 const postSchemer = async (user, title, postBody, imageFile, senderPicture) => {
   try {
@@ -39,7 +40,7 @@ async function getProfilePost(profileUsername) {
   return postData.length > 0 ? postData : "you don't have any post yet";
   // return postData;
 }
-const draftPost = async (user, title, postBody, imageFile, senderPicture) => {
+const draftPost = async (user, title, postBody) => {
   const draftResponse = await bloggers.updateOne(
     { username: user },
     {
@@ -49,8 +50,6 @@ const draftPost = async (user, title, postBody, imageFile, senderPicture) => {
           user: user,
           title: title,
           postBody: postBody,
-          senderPicture: senderPicture,
-          imageFile: imageFile ? imageFile : "",
         },
       },
     }
@@ -58,4 +57,21 @@ const draftPost = async (user, title, postBody, imageFile, senderPicture) => {
   return draftResponse;
 };
 
-module.exports = { postSchemer, allPost, getPost, getProfilePost, draftPost };
+const deleteDraft = async (username, id) => {
+  const user = await getUser(username);
+  const getPost = user.drafts.find((post) => post.id == Number(id));
+  const deleteReponse = bloggers.updateOne(
+    { username: username },
+    { $pull: { drafts: getPost } }
+  );
+  return deleteReponse;
+};
+
+module.exports = {
+  deleteDraft,
+  postSchemer,
+  allPost,
+  getPost,
+  getProfilePost,
+  draftPost,
+};

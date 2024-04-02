@@ -5,6 +5,7 @@ const {
   getPost,
   getProfilePost,
   draftPost,
+  deleteDraft,
 } = require("../Model/Post");
 const { userSchemer, getUser } = require("../Model/User");
 const { uploadImage, userProfileUpload } = require("../Utils/cloudinary");
@@ -293,30 +294,36 @@ const UpdateUserPassword = async (req, res) => {
   }
 };
 const postToDraft = async (req, res) => {
-  const imageFile = req.file;
   const user = req.user.payload;
-  const { postBody, title, userPicture } = req.body;
+  const { postBody, title } = req.body;
   try {
-    if (!imageFile) {
-      const response = await draftPost(user, title, postBody, "", userPicture);
-      console.log(response);
+    const response = await draftPost(user, title, postBody);
+    if (response.modifiedCount == 1) {
+      res.status(200).send({ response: "post successfully drafted" });
+    } else {
+      res.status(503).send({ response: "operation failed, try again" });
     }
-    let cloudUploadResponse = await uploadImage(imageFile.path);
-    const response = await draftPost(
-      user,
-      title,
-      postBody,
-      cloudUploadResponse,
-      userPicture
-    );
-    console.log(response);
   } catch (error) {
-    console.log(error);
+    res.status(500).send({ response: error });
   }
 };
 
+const deleteDraftPost = async (req, res) => {
+  const user = req.user.payload;
+  const { id } = req.body;
+  try {
+    const response = await deleteDraft(user, id);
+
+    if (response.matchedCount === 1) {
+      res.status(200).send({ response: "post deleted" });
+    }
+  } catch (error) {
+    res.status(500).send({ response: "error occured" });
+  }
+};
 
 module.exports = {
+  deleteDraftPost,
   postToDraft,
   UpdateUserPassword,
   verifyCode,
